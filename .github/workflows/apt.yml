@@ -17,6 +17,7 @@ jobs:
           - label: Debian GNU/Linux buster amd64
             rake-job: debian-buster
             test-docker-image: debian:buster
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
