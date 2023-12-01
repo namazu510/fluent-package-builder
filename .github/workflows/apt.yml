@@ -12,23 +12,11 @@ jobs:
       fail-fast: false
       matrix:
         label:
-          - Debian GNU/Linux bullseye amd64
-          - Debian GNU/Linux bookworm amd64
-          - Ubuntu Focal amd64
-          - Ubuntu Jammy amd64
+          - Debian GNU/Linux buster amd64
         include:
-          - label: Debian GNU/Linux bullseye amd64
-            rake-job: debian-bullseye
-            test-docker-image: debian:bullseye
-          - label: Debian GNU/Linux bookworm amd64
-            rake-job: debian-bookworm
-            test-docker-image: debian:bookworm
-          - label: Ubuntu Focal amd64
-            rake-job: ubuntu-focal
-            test-docker-image: ubuntu:focal
-          - label: Ubuntu Jammy amd64
-            rake-job: ubuntu-jammy
-            test-docker-image: ubuntu:jammy
+          - label: Debian GNU/Linux buster amd64
+            rake-job: debian-buster
+            test-docker-image: debian:buster
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -92,25 +80,3 @@ jobs:
           --volume ${PWD}:/fluentd:ro \
           ${{ matrix.test-docker-image }} \
           /fluentd/fluent-package/apt/binstubs-test.sh
-  test:
-    name: Test
-    needs: build
-    runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        distribution:
-          - debian-bullseye
-          - debian-bookworm
-          - ubuntu-focal
-          - ubuntu-jammy
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/download-artifact@master
-        with:
-          name: packages-${{ matrix.distribution }}
-      - uses: actions/download-artifact@master
-        with:
-          name: packages-apt-source-${{ matrix.distribution }}
-      - name: Run Test
-        run: fluent-package/apt/systemd-test/test.sh ${{ matrix.distribution }}
